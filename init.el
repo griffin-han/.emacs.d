@@ -1,3 +1,4 @@
+;; run package-install-selected-packages and then edit jedi:environment-root below
 (setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
                          ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
 (package-initialize) ;; You might already have this line
@@ -35,6 +36,9 @@
 ;; Standard Jedi.el setting
 (add-hook 'python-mode-hook 'jedi:setup)
 (setq jedi:complete-on-dot t)
+;; set to the right path
+(setq jedi:environment-root "/data/xxxx/miniconda2")
+;; (jedi:install-server)
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (global-set-key (kbd "M-s l") 'py-autopep8)
 
