@@ -33,6 +33,9 @@
   smartparens-mode(lambda () (smartparens-mode t)))
 (my-smartparens-mode t)
 
+
+(global-set-key (kbd "M-s g") 'goto-line)
+
 ;; Standard Jedi.el setting
 ;; set to the right path
 (setq jedi:environment-root "/data/xxxx/miniconda2")
