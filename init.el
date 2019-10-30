@@ -35,11 +35,17 @@
 
 ;; Standard Jedi.el setting
 (add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
+;; set to the right path
+(setq jedi:environment-root "/data/xxxx/miniconda2")
+;; (jedi:install-server)
+
+
 (add-hook 'python-mode-hook (semantic-mode 1))
 (add-hook 'speedbar-load-hook (lambda () (require 'semantic/sb)))
 (global-set-key (kbd "M-s p") 'sr-speedbar-toggle)
 
-(setq jedi:complete-on-dot t)
+
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (global-set-key (kbd "M-s l") 'py-autopep8)
 
