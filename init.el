@@ -34,11 +34,12 @@
 (my-smartparens-mode t)
 
 ;; Standard Jedi.el setting
-(add-hook 'python-mode-hook 'jedi:setup)
-(setq jedi:complete-on-dot t)
 ;; set to the right path
 (setq jedi:environment-root "/data/xxxx/miniconda2")
 ;; (jedi:install-server)
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
+
 
 
 (add-hook 'python-mode-hook (semantic-mode 1))
