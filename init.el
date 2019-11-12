@@ -1,4 +1,4 @@
-;; run package-install-selected-packages and then edit jedi:environment-root below and uncomment (jedi:install-server), run once
+;; run package-install-selected-packages and then edit jedi:environment-root below and run M-x jedi:install-server run once
 (setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
                          ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
 (package-initialize) ;; You might already have this line
@@ -9,13 +9,14 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (sr-speedbar py-autopep8 flycheck jedi smartparens comment-dwim-2 avy monokai-pro-theme neotree))))
+    (ace-window ein sr-speedbar py-autopep8 flycheck jedi smartparens comment-dwim-2 avy monokai-pro-theme neotree))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(setq auto-save-default nil)
 (setq make-backup-files nil)
 (load-theme 'monokai-pro t)
 (global-set-key (kbd "M-s n") 'neotree-toggle)
@@ -28,27 +29,22 @@
 (setq electric-pair-preserve-balance nil)
 (require 'smartparens-config)
 
+(global-set-key (kbd "M-s g") 'goto-line)
 
 (define-globalized-minor-mode my-smartparens-mode
   smartparens-mode(lambda () (smartparens-mode t)))
 (my-smartparens-mode t)
 
-
-(global-set-key (kbd "M-s g") 'goto-line)
-
 ;; Standard Jedi.el setting
-;; set to the right path
-(setq jedi:environment-root "/data/xxxx/miniconda2")
+(setq jedi:environment-root "/data/hanbing/.conda/envs/multimodal")
 ;; (jedi:install-server)
 (add-hook 'python-mode-hook 'jedi:setup)
 (setq jedi:complete-on-dot t)
-
-
+;; (setq jedi:use-shortcuts t)
 
 (add-hook 'python-mode-hook (semantic-mode 1))
 (add-hook 'speedbar-load-hook (lambda () (require 'semantic/sb)))
 (global-set-key (kbd "M-s p") 'sr-speedbar-toggle)
-
 
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (global-set-key (kbd "M-s l") 'py-autopep8)
