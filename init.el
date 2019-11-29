@@ -26,6 +26,15 @@
 (global-set-key (kbd "M-s n") 'neotree-toggle)
 ;;(display-line-numbers-mode 1)
 
+(defun neotree-startup ()
+  (interactive)
+  (neotree-show)
+  (call-interactively 'other-window))
+
+(if (daemonp)
+    (add-hook 'server-switch-hook #'neotree-startup)
+  (add-hook 'after-init-hook #'neotree-startup)
+  )
 
 (when (version<= "26.0.50" emacs-version )
   (global-display-line-numbers-mode))
