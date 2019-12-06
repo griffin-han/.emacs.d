@@ -13,7 +13,7 @@
     ("b59d7adea7873d58160d368d42828e7ac670340f11f36f67fa8071dbf957236a" default)))
  '(package-selected-packages
    (quote
-    (airline-themes evil-terminal-cursor-changer evil-nerd-commenter evil yasnippet-snippets yasnippet ace-window ein sr-speedbar py-autopep8 flycheck jedi smartparens avy monokai-pro-theme neotree))))
+    (flycheck airline-themes evil-terminal-cursor-changer evil-nerd-commenter evil yasnippet-snippets yasnippet ace-window ein sr-speedbar py-autopep8 jedi smartparens avy monokai-pro-theme neotree))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -24,17 +24,10 @@
 (setq make-backup-files nil)
 (load-theme 'monokai-pro t)
 (global-set-key (kbd "M-s n") 'neotree-toggle)
-;;(display-line-numbers-mode 1)
 
-(defun neotree-startup ()
-  (interactive)
-  (neotree-show)
-  (call-interactively 'other-window))
 
-(if (daemonp)
-    (add-hook 'server-switch-hook #'neotree-startup)
-  (add-hook 'after-init-hook #'neotree-startup)
-  )
+
+(global-set-key (kbd "M-s i") 'global-display-line-numbers-mode)
 
 (when (version<= "26.0.50" emacs-version )
   (global-display-line-numbers-mode))
@@ -60,6 +53,21 @@
 (require 'evil)
 (evil-mode 1)
 (global-set-key (kbd "M-;") 'evilnc-comment-or-uncomment-lines)
+(setq evil-esc-delay 0.05)
+
+(evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
+(evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
+(evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+(evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
+(evil-define-key 'normal neotree-mode-map (kbd "g") 'neotree-refresh)
+(evil-define-key 'normal neotree-mode-map (kbd "n") 'neotree-next-line)
+(evil-define-key 'normal neotree-mode-map (kbd "p") 'neotree-previous-line)
+(evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
+(evil-define-key 'normal neotree-mode-map (kbd "H") 'neotree-hidden-file-toggle)
+
+
+
+
 (require 'airline-themes)
 (load-theme 'airline-light)
 
@@ -73,6 +81,8 @@
 (global-set-key (kbd "M-s p") 'sr-speedbar-toggle)
 
 (add-hook 'after-init-hook #'global-flycheck-mode)
+
+
 (global-set-key (kbd "M-s l") 'py-autopep8-buffer)
 
 (global-set-key (kbd "M-RET") (lambda ()
@@ -83,3 +93,11 @@
                                 ;; (end-of-line)
                                 ))
 (global-set-key (kbd "M-s m") 'cua-rectangle-mark-mode)
+
+(add-to-list 'display-buffer-alist
+             `(,(rx bos "*Flycheck errors*" eos)
+              (display-buffer-reuse-window
+               display-buffer-in-side-window)
+              (side            . bottom)
+              (reusable-frames . visible)
+              (window-height   . 0.2)))
