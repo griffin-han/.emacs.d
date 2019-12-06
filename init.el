@@ -1,4 +1,3 @@
-;;; package --- Summary
 ;; run package-install-selected-packages and then edit jedi:environment-root below and run M-x jedi:install-server run once
 (setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
                          ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
@@ -13,7 +12,7 @@
     ("b59d7adea7873d58160d368d42828e7ac670340f11f36f67fa8071dbf957236a" default)))
  '(package-selected-packages
    (quote
-    (flycheck airline-themes evil-terminal-cursor-changer evil-nerd-commenter evil yasnippet-snippets yasnippet ace-window ein sr-speedbar py-autopep8 jedi smartparens avy monokai-pro-theme neotree))))
+    (flycheck evil-terminal-cursor-changer evil-nerd-commenter evil yasnippet-snippets yasnippet ace-window ein sr-speedbar py-autopep8 jedi smartparens avy monokai-pro-theme neotree))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -42,7 +41,7 @@
 (my-smartparens-mode t)
 
 ;; Standard Jedi.el setting
-(setq jedi:environment-root "/data/hanbing/miniconda2/envs/emacs")
+(setq jedi:environment-root "/data/hanbing/.conda/envs/multimodal")
 ;; (jedi:install-server)
 (add-hook 'python-mode-hook 'jedi:setup)
 (setq jedi:complete-on-dot t)
@@ -65,11 +64,18 @@
 (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
 (evil-define-key 'normal neotree-mode-map (kbd "H") 'neotree-hidden-file-toggle)
 
-
-
-
-(require 'airline-themes)
-(load-theme 'airline-light)
+(eval-when-compile (require 'cl))
+(lexical-let ((default-color (cons (face-background 'mode-line)
+                                   (face-foreground 'mode-line))))
+  (add-hook 'post-command-hook
+    (lambda ()
+      (let ((color (cond ((minibufferp) default-color)
+                         ((evil-insert-state-p) '("#008000" . "#ffffff"))
+                         ((evil-emacs-state-p)  '("#444488" . "#ffffff"))
+                         ((buffer-modified-p)   '("#006fa0" . "#ffffff"))
+                         (t default-color))))
+        (set-face-background 'mode-line (car color))
+        (set-face-foreground 'mode-line (cdr color))))))
 
 (require 'yasnippet)
 (yas-reload-all)
@@ -96,8 +102,8 @@
 
 (add-to-list 'display-buffer-alist
              `(,(rx bos "*Flycheck errors*" eos)
-              (display-buffer-reuse-window
-               display-buffer-in-side-window)
-              (side            . bottom)
-              (reusable-frames . visible)
-              (window-height   . 0.2)))
+               (display-buffer-reuse-window
+                display-buffer-in-side-window)
+               (side            . bottom)
+               (reusable-frames . visible)
+               (window-height   . 0.2)))
