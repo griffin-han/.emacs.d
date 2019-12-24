@@ -53,6 +53,8 @@
 (evil-mode 1)
 (global-set-key (kbd "M-;") 'evilnc-comment-or-uncomment-lines)
 (setq evil-esc-delay 0.05)
+(define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
+
 
 (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
 (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
