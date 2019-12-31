@@ -19,43 +19,53 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+;; turn off autosave and backupfile
 (setq auto-save-default nil)
 (setq make-backup-files nil)
+
+;; load theme
 (load-theme 'monokai-pro t)
-(global-set-key (kbd "M-s n") 'neotree-toggle)
 
-
-
-(global-set-key (kbd "M-s i") 'global-display-line-numbers-mode)
-
+;; start evil mode
+(require 'evil)
+(evil-mode 1)
+(global-set-key (kbd "M-;") 'evilnc-comment-or-uncomment-lines)
+;; evil-esc-delay to adjust esc behave as 'M' or 'vim esc'
+(setq evil-esc-delay 0.05)
+(define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
+(define-key evil-normal-state-map (kbd "TAB") 'global-display-line-numbers-mode)
+(define-key evil-normal-state-map (kbd "C-n") 'neotree-toggle)
+;; only when python mode, add this key map
+(add-hook 'python-mode-hook
+          (lambda ()
+            (define-key evil-normal-state-map (kbd "t") 'py-autopep8-buffer)
+                              ;;(local-set-key (kbd "M-s l") 'py-autopep8-buffer)
+          ))
+;; show line number
 (when (version<= "26.0.50" emacs-version )
   (global-display-line-numbers-mode))
-(global-set-key (kbd "M-s f") 'avy-goto-char)
+
 (setq electric-pair-preserve-balance nil)
+;; smart pairs and start it
 (require 'smartparens-config)
-
-(global-set-key (kbd "M-s g") 'goto-line)
-
 (define-globalized-minor-mode my-smartparens-mode
   smartparens-mode(lambda () (smartparens-mode t)))
 (my-smartparens-mode t)
 
+;; can relpaced by evil mode goto
+;; (global-set-key (kbd "M-s g") 'goto-line)
+
+
 ;; Standard Jedi.el setting
-(setq jedi:environment-root "/data/hanbing/.conda/envs/multimodal")
+(setq jedi:environment-root "/data/miniconda3/envs/emacs")
 ;; (jedi:install-server)
 (add-hook 'python-mode-hook 'jedi:setup)
 (setq jedi:complete-on-dot t)
 ;; (setq jedi:use-shortcuts t)
 
 
-
-(require 'evil)
-(evil-mode 1)
-(global-set-key (kbd "M-;") 'evilnc-comment-or-uncomment-lines)
-(setq evil-esc-delay 0.05)
-(define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
-
-
+;; let neotree key behacve normal when using evil mode
 (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
 (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
 (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
@@ -66,6 +76,7 @@
 (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
 (evil-define-key 'normal neotree-mode-map (kbd "H") 'neotree-hidden-file-toggle)
 
+;; mode line change color when mode changes
 (eval-when-compile (require 'cl))
 (lexical-let ((default-color (cons (face-background 'mode-line)
                                    (face-foreground 'mode-line))))
@@ -79,29 +90,32 @@
         (set-face-background 'mode-line (car color))
         (set-face-foreground 'mode-line (cdr color))))))
 
+;; YASnippet is a template system for Emacs
 (require 'yasnippet)
 (yas-reload-all)
 (add-hook 'prog-mode-hook #'yas-minor-mode)
 
-
+;; let sppedbar use semantic to parse code file
 (add-hook 'python-mode-hook (semantic-mode 1))
 (add-hook 'speedbar-load-hook (lambda () (require 'semantic/sb)))
 (global-set-key (kbd "M-s p") 'sr-speedbar-toggle)
 
+;; start check code syntax
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
 
-(global-set-key (kbd "M-s l") 'py-autopep8-buffer)
+;; insert a new line before current line, replaced by evil mode shift-O
+;; (global-set-key (kbd "M-RET") (lambda ()
+;;                                 (interactive)
+;;                                 (beginning-of-line)
+;;                                 (newline-and-indent)
+;;                                 (previous-line)
+;;                                 ;; (end-of-line)
+;;                                 ))
 
-(global-set-key (kbd "M-RET") (lambda ()
-                                (interactive)
-                                (beginning-of-line)
-                                (newline-and-indent)
-                                (previous-line)
-                                ;; (end-of-line)
-                                ))
 (global-set-key (kbd "M-s m") 'cua-rectangle-mark-mode)
 
+;; make flycheck error msg buffer stay below
 (add-to-list 'display-buffer-alist
              `(,(rx bos "*Flycheck errors*" eos)
                (display-buffer-reuse-window
@@ -109,3 +123,16 @@
                (side            . bottom)
                (reusable-frames . visible)
                (window-height   . 0.2)))
+;;flycheck buffer toggle func
+(defun toggle-flycheck-error-buffer ()
+  "toggle a flycheck error buffer."
+  (interactive)
+  (if (string-match-p "Flycheck errors" (format "%s" (window-list)))
+      (dolist (w (window-list))
+        (when (string-match-p "*Flycheck errors*" (buffer-name (window-buffer w)))
+          (delete-window w)
+          ))
+    (flycheck-list-errors)
+    )
+    )
+(define-key evil-normal-state-map (kbd "e") 'toggle-flycheck-error-buffer)
