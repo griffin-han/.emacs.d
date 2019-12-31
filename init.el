@@ -1,4 +1,10 @@
 ;; run package-install-selected-packages and then edit jedi:environment-root below and run M-x jedi:install-server run once
+
+;; set below 3lines in .bashrc, mod EMACS_BIN_PATH if nessary
+;;EMACS_BIN_PATH='/data/miniconda3/envs/emacs/bin/'                                                                                                                                                                              
+;;alias emacs='TERM=xterm-256color PATH=$EMACS_BIN_PATH:$PATH emacs'                                                                                                                                                             
+;;alias et='ALTERNATE_EDITOR="" PATH=$EMACS_BIN_PATH:$PATH emacsclient -tty'
+
 (setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
                          ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
 (package-initialize) ;; You might already have this line
