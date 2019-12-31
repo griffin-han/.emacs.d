@@ -1,8 +1,8 @@
 ;; run package-install-selected-packages and then edit jedi:environment-root below and run M-x jedi:install-server run once
 
 ;; set below 3lines in .bashrc, mod EMACS_BIN_PATH if nessary
-;;EMACS_BIN_PATH='/data/miniconda3/envs/emacs/bin/'                                                                                                                                                                              
-;;alias emacs='TERM=xterm-256color PATH=$EMACS_BIN_PATH:$PATH emacs'                                                                                                                                                             
+;;EMACS_BIN_PATH='/data/miniconda3/envs/emacs/bin/'
+;;alias emacs='TERM=xterm-256color PATH=$EMACS_BIN_PATH:$PATH emacs'
 ;;alias et='ALTERNATE_EDITOR="" PATH=$EMACS_BIN_PATH:$PATH emacsclient -tty'
 
 (setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
@@ -42,6 +42,8 @@
 (define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
 (define-key evil-normal-state-map (kbd "TAB") 'global-display-line-numbers-mode)
 (define-key evil-normal-state-map (kbd "C-n") 'neotree-toggle)
+;; for paste use, toggle auto indent
+(define-key evil-normal-state-map (kbd "M-y") 'electric-indent-mode)
 ;; only when python mode, add this key map
 (add-hook 'python-mode-hook
           (lambda ()
@@ -52,7 +54,7 @@
 (when (version<= "26.0.50" emacs-version )
   (global-display-line-numbers-mode))
 
-(setq electric-pair-preserve-balance nil)
+;; (setq electric-pair-preserve-balance nil)
 ;; smart pairs and start it
 (require 'smartparens-config)
 (define-globalized-minor-mode my-smartparens-mode
